@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/Player.gd" type="Script" id=1]
 [ext_resource path="res://tilesets/character-frames.tres" type="SpriteFrames" id=2]
 [ext_resource path="res://images/fog2.png" type="Texture" id=3]
 [ext_resource path="res://audio/pickup.wav" type="AudioStream" id=4]
 [ext_resource path="res://audio/break.wav" type="AudioStream" id=5]
+[ext_resource path="res://audio/splash.wav" type="AudioStream" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -38,12 +39,6 @@ enabled = true
 [node name="Fog" type="Sprite" parent="."]
 texture = ExtResource( 3 )
 
-[node name="pickup_sound" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 4 )
-
-[node name="break_sound" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 5 )
-
 [node name="Sensor" type="Area2D" parent="."]
 position = Vector2( 0, 2 )
 scale = Vector2( 0.5, 0.5 )
@@ -53,3 +48,12 @@ position = Vector2( 0, 24 )
 shape = SubResource( 2 )
 
 [node name="Line2D" type="Line2D" parent="Sensor/CollisionShape2D"]
+
+[node name="pickup_sound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )
+
+[node name="break_sound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+
+[node name="splash_sound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )

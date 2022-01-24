@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 export(Vector2) var velocity = Vector2.UP * 20
-export(int) var life = 3
+export(int) var health = 3
 
 func _ready():
 	pass
@@ -11,3 +11,6 @@ func _physics_process(delta):
 	
 	if get_slide_count() > 0:
 		velocity = -velocity
+
+func get_damage(amount):
+	pass
