@@ -106,8 +106,3 @@ func _physics_process(delta):
 					collision.collider.set_cellv(tile_pos, 0)
 					emit_signal("got_item", tile_name)
 					$pickup_sound.play()
-
-
-
-func _on_Sensor_body_entered(body):
-	print('entered ', body)
