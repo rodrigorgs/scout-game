@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://tilesets/forest/forest.tres" type="TileSet" id=1]
+[ext_resource path="res://tilesets/forest.tres" type="TileSet" id=1]
 [ext_resource path="res://scenes/Player.gd" type="Script" id=3]
-[ext_resource path="res://tilesets/character/character-frames.tres" type="SpriteFrames" id=4]
+[ext_resource path="res://tilesets/character-frames.tres" type="SpriteFrames" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -18,18 +18,20 @@ tile_data = PoolIntArray( 0, 7, 0, 1, 7, 0, 2, 7, 0, 3, 7, 0, 4, 7, 0, 5, 7, 0, 
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
-tile_data = PoolIntArray( 131074, 10, 0, 196610, 10, 0, 196611, 10, 0 )
+tile_data = PoolIntArray( 131074, 10, 0, 131076, 12, 0, 196610, 10, 0, 196611, 10, 0, 196612, 10, 0, 262146, 10, 0, 262147, 12, 0, 262148, 10, 0, 327682, 10, 0, 327683, 10, 0, 327684, 10, 0 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="tm-foreground"]
 script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="tm-foreground/KinematicBody2D"]
-scale = Vector2( 0.7, 0.9 )
+position = Vector2( 0, 3 )
+scale = Vector2( 0.5, 0.6 )
 shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="tm-foreground/KinematicBody2D"]
 frames = ExtResource( 4 )
 animation = "fire-down"
+frame = 2
 speed_scale = 1.5
 playing = true
 
