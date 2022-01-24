@@ -72,7 +72,7 @@ func fire():
 		var tile_id = tilemap.get_cellv(neighbor)
 		if tile_id > 0:
 			var tile_name = tilemap.tile_set.tile_get_name(tile_id)
-			if not tile_name.begins_with('item-'):
+			if tile_name.begins_with('block-'):
 				var dist = tilemap.map_to_world(neighbor).distance_squared_to(position)
 				if dist < min_distance:
 					min_distance = dist
@@ -82,8 +82,25 @@ func fire():
 		hit_tile_at(neighbor_pos[index_min_distance])
 		
 func hit_tile_at(pos):
-	tileMap.set_cellv(pos, 0)
-	$break_sound.play()
+	var tile_id = tileMap.get_cellv(pos)
+	if tile_id > 0:
+		var tile_name: String = tileMap.tile_set.tile_get_name(tile_id)
+		if len(tile_name) > 0:
+			var digit = tile_name.substr(len(tile_name) -1, 1)
+			if digit.is_valid_integer():
+				var next_digit = int(digit) - 1
+				var next_tile_id = 0
+				if next_digit != 0:
+					var next_tile_name = tile_name.substr(0, len(tile_name) - 1) + str(next_digit)
+					print('next: ', next_tile_name)
+					next_tile_id = (tileMap as TileMap).tile_set.find_tile_by_name(next_tile_name)
+				
+				print('next id: ', next_tile_id)
+				tileMap.set_cellv(pos, next_tile_id)
+				$break_sound.play()
+			else:
+				tileMap.set_cellv(pos, 0)
+				$break_sound.play()
 
 func finish_fire_animation(_x):
 	firing = false
