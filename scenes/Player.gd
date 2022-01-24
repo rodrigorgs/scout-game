@@ -60,6 +60,7 @@ func fire():
 				if not tile_name.begins_with('item-'):
 					print('tilename', tile_name)
 					tilemap.set_cellv(tile_pos, 0)
+					$break_sound.play()
 
 func finish_fire_animation(_x):
 	firing = false
@@ -80,4 +81,5 @@ func _physics_process(delta):
 				if tile_name.begins_with('item-'):
 					collision.collider.set_cellv(tile_pos, 0)
 					emit_signal("got_item", tile_name)
+					$pickup_sound.play()
 
