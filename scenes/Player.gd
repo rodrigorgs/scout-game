@@ -9,7 +9,7 @@ var firing = false
 onready var raycast = get_node("RayCast2D")
 onready var sensor = get_node("Sensor")
 export(NodePath) var tileMap
-var attack = 3
+var attack = 2
 
 signal got_item
 

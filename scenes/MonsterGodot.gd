@@ -3,9 +3,10 @@ class_name Monster
 
 export(Vector2) var velocity = Vector2.UP * 20
 export(int) var health = 3
+export(Texture) var texture
 
 func _ready():
-	pass
+	$Sprite.texture = texture
 
 func _physics_process(delta):
 	move_and_slide(velocity)
@@ -14,6 +15,7 @@ func _physics_process(delta):
 		velocity = -velocity
 
 func get_damage(amount):
+	velocity = -velocity
 	health -= amount
 	if health <= 0:
 		queue_free()
