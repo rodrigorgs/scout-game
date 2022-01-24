@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Character_SlashDownRight.png-c70f70083fc86ee7b901e391e5a9356a.stex"
+path="res://.import/Character_Up.png-fe7e3d87e945e2bee94d6054e933fb3d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tilesets/character/extra/Character_SlashDownRight.png"
-dest_files=[ "res://.import/Character_SlashDownRight.png-c70f70083fc86ee7b901e391e5a9356a.stex" ]
+source_file="res://tilesets/character/walk/Character_Up.png"
+dest_files=[ "res://.import/Character_Up.png-fe7e3d87e945e2bee94d6054e933fb3d.stex" ]
 
 [params]
 
