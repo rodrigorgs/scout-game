@@ -73,8 +73,7 @@ func _physics_process(delta):
 			tile_pos -= collision.normal
 			var tile_id = collision.collider.get_cellv(tile_pos)
 			if tile_id > 0:
-				var tile_name = collision.collider.tile_set.tile_get_name(tile_id)
-				#print('collided with' + tile_name)
-				if tile_name == 'item':
+				var tile_name: String = collision.collider.tile_set.tile_get_name(tile_id)
+				if tile_name.begins_with('item-'):
 					collision.collider.set_cellv(tile_pos, 0)
 
