@@ -8,6 +8,8 @@ onready var sprite: AnimatedSprite = get_node("AnimatedSprite")
 var firing = false
 onready var raycast = get_node("RayCast2D")
 
+signal got_item
+
 func get_input():
 	velocity = Vector2.ZERO
 	if Input.is_action_pressed('ui_right'):
@@ -55,8 +57,9 @@ func fire():
 			var tile_id = tilemap.get_cellv(tile_pos)
 			if tile_id > 0:
 				var tile_name = tilemap.tile_set.tile_get_name(tile_id)
-				print('tilename', tile_name)
-				tilemap.set_cellv(tile_pos, 0)
+				if not tile_name.begins_with('item-'):
+					print('tilename', tile_name)
+					tilemap.set_cellv(tile_pos, 0)
 
 func finish_fire_animation(_x):
 	firing = false
@@ -76,4 +79,5 @@ func _physics_process(delta):
 				var tile_name: String = collision.collider.tile_set.tile_get_name(tile_id)
 				if tile_name.begins_with('item-'):
 					collision.collider.set_cellv(tile_pos, 0)
+					emit_signal("got_item", tile_name)
 
