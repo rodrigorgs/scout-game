@@ -9,6 +9,7 @@ var firing = false
 onready var raycast = get_node("RayCast2D")
 onready var sensor = get_node("Sensor")
 export(NodePath) var tileMap
+var attack = 3
 
 signal got_item
 
@@ -27,6 +28,7 @@ func get_input():
 		velocity.y -= 1
 		direction = 'up'
 	if Input.is_action_just_pressed('ui_select') and not firing:
+		$attack_sound.play()
 		firing = true
 		sprite.play('fire-' + direction)
 		if not sprite.is_connected("animation_finished", self, 'finish_fire_animation'):
@@ -46,7 +48,6 @@ func get_input():
 	else:
 		sensor.rotation_degrees = 0
 	
-	
 	# Change animation
 	if not firing:
 		if velocity == Vector2.ZERO:
@@ -55,7 +56,7 @@ func get_input():
 			sprite.play('walk-' + direction)
 	
 
-func fire():
+func fire_tilemaps():
 	var tilemap: TileMap = tileMap
 	var player_tile_pos = tilemap.world_to_map(position)
 	var normal = direction_vector.rotated(PI/2).normalized()
@@ -80,6 +81,18 @@ func fire():
 	
 	if index_min_distance > -1:
 		hit_tile_at(neighbor_pos[index_min_distance])
+
+func fire_nodes():
+	var bodies = sensor.get_overlapping_bodies()
+	for body in bodies:
+		print('fire at ', body)
+		if body is Monster:
+			var monster: Monster = body
+			monster.get_damage(attack)
+
+func fire():
+	fire_tilemaps()
+	fire_nodes()
 		
 func hit_tile_at(pos):
 	var tile_id = tileMap.get_cellv(pos)
@@ -97,10 +110,10 @@ func hit_tile_at(pos):
 				
 				print('next id: ', next_tile_id)
 				tileMap.set_cellv(pos, next_tile_id)
-				$break_sound.play()
+#				$break_sound.play()
 			else:
 				tileMap.set_cellv(pos, 0)
-				$break_sound.play()
+#				$break_sound.play()
 
 func finish_fire_animation(_x):
 	firing = false
@@ -114,15 +127,19 @@ func _physics_process(delta):
 		var collision = get_slide_collision(i)
 		# Confirm the colliding body is a TileMap
 		if collision and collision.collider is TileMap:
-			var tile_pos = collision.collider.world_to_map(position)
-			tile_pos -= collision.normal
-			var tile_id = collision.collider.get_cellv(tile_pos)
-			if tile_id > 0:
-				var tile_name: String = collision.collider.tile_set.tile_get_name(tile_id)
-				if tile_name.begins_with('item-'):
-					collision.collider.set_cellv(tile_pos, 0)
-					emit_signal("got_item", tile_name)
-					$pickup_sound.play()
-				elif tile_name == 'water':
-					if not $splash_sound.playing:
-						$splash_sound.play()
+			collide_with_tilemap(collision)
+
+func collide_with_tilemap(collision):
+	var tile_pos = collision.collider.world_to_map(position)
+	tile_pos -= collision.normal
+	var tile_id = collision.collider.get_cellv(tile_pos)
+	if tile_id > 0:
+		var tile_name: String = collision.collider.tile_set.tile_get_name(tile_id)
+		if tile_name.begins_with('item-'):
+			collision.collider.set_cellv(tile_pos, 0)
+			emit_signal("got_item", tile_name)
+			$pickup_sound.play()
+		elif tile_name == 'water':
+			if not $splash_sound.playing:
+				$splash_sound.play()
+	

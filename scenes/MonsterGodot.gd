@@ -1,4 +1,5 @@
 extends KinematicBody2D
+class_name Monster
 
 export(Vector2) var velocity = Vector2.UP * 20
 export(int) var health = 3
@@ -13,4 +14,6 @@ func _physics_process(delta):
 		velocity = -velocity
 
 func get_damage(amount):
-	pass
+	health -= amount
+	if health <= 0:
+		queue_free()
