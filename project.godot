@@ -26,6 +26,8 @@ window/stretch/aspect="keep"
 [global]
 
 "pixel snap"=true
+esc=false
+escape=false
 
 [physics]
 

@@ -7,6 +7,8 @@ var direction_vector = Vector2.LEFT
 onready var sprite: AnimatedSprite = get_node("AnimatedSprite")
 var firing = false
 onready var raycast = get_node("RayCast2D")
+onready var sensor = get_node("Sensor")
+export(NodePath) var tileMap
 
 signal got_item
 
@@ -35,6 +37,16 @@ func get_input():
 	if velocity != Vector2.ZERO:
 		direction_vector = velocity
 	
+	if direction == 'up':
+		sensor.rotation_degrees = 180
+	elif direction == 'left':
+		sensor.rotation_degrees = 90
+	elif direction == 'right':
+		sensor.rotation_degrees = 270
+	else:
+		sensor.rotation_degrees = 0
+	
+	
 	# Change animation
 	if not firing:
 		if velocity == Vector2.ZERO:
@@ -44,23 +56,34 @@ func get_input():
 	
 
 func fire():
-	raycast.cast_to = direction_vector * 0.7
-	print('fire', raycast.cast_to)
-	if raycast.is_colliding():
-		print('is colliding')
-		if raycast.get_collider() is TileMap:
-			print('is tilemap')
-			var tilemap = raycast.get_collider()
-			var tile_pos = tilemap.world_to_map(position)
-			tile_pos -= raycast.get_collision_normal()
-			print('tile pos ', tile_pos)
-			var tile_id = tilemap.get_cellv(tile_pos)
-			if tile_id > 0:
-				var tile_name = tilemap.tile_set.tile_get_name(tile_id)
-				if not tile_name.begins_with('item-'):
-					print('tilename', tile_name)
-					tilemap.set_cellv(tile_pos, 0)
-					$break_sound.play()
+	var tilemap: TileMap = tileMap
+	var player_tile_pos = tilemap.world_to_map(position)
+	var normal = direction_vector.rotated(PI/2).normalized()
+	var direction_unit = direction_vector.normalized()
+	var neighbor_pos = [
+		player_tile_pos + direction_unit,
+		player_tile_pos + direction_unit + normal,
+		player_tile_pos + direction_unit - normal]
+	
+	var min_distance = 9999999
+	var index_min_distance = -1
+	for index in range(3):
+		var neighbor = neighbor_pos[index]
+		var tile_id = tilemap.get_cellv(neighbor)
+		if tile_id > 0:
+			var tile_name = tilemap.tile_set.tile_get_name(tile_id)
+			if not tile_name.begins_with('item-'):
+				var dist = tilemap.map_to_world(neighbor).distance_squared_to(position)
+				if dist < min_distance:
+					min_distance = dist
+					index_min_distance = index
+	
+	if index_min_distance > -1:
+		hit_tile_at(neighbor_pos[index_min_distance])
+		
+func hit_tile_at(pos):
+	tileMap.set_cellv(pos, 0)
+	$break_sound.play()
 
 func finish_fire_animation(_x):
 	firing = false
@@ -69,6 +92,7 @@ func finish_fire_animation(_x):
 func _physics_process(delta):
 	get_input()
 	velocity = move_and_slide(velocity)
+	
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
 		# Confirm the colliding body is a TileMap
@@ -83,3 +107,7 @@ func _physics_process(delta):
 					emit_signal("got_item", tile_name)
 					$pickup_sound.play()
 
+
+
+func _on_Sensor_body_entered(body):
+	print('entered ', body)
