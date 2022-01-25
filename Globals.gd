@@ -1,17 +1,41 @@
 extends Node
 
+# TODO: move to a spreadsheet (CSV file)
+
 var block_info = {
 	'block-rock': {
-		'min_damage': 5
+		'min_strength': 5
+	},
+	'block-tree-1': {
+		'min_strength': 1
+	},
+	'block-tree-2': {
+		'min_strength': 1
+	},
+	'block-tree-3': {
+		'min_strength': 1
+	},
+	'block-btree-1': {
+		'min_strength': 2
+	},
+	'block-btree-2': {
+		'min_strength': 2
+	},
+	'block-btree-3': {
+		'min_strength': 2
 	},
 }
 
 var tool_info = {
-	'axe': {
-		'damage': 3
+	'Hands': {
+		'name': 'Hands',
+		'strength': 1,
+		'cost': 0
 	},
-	'pickaxe': {
-		'damage': 5
+	'PickaxeTool': {
+		'name': 'PickaxeTool',
+		'strength': 2,
+		'cost': 5
 	},
 }
 

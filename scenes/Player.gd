@@ -11,6 +11,7 @@ onready var sensor = get_node("Sensor")
 export(NodePath) var tileMap
 var attack = 2
 var money = 0.0
+var current_tool = Globals.tool_info['Hands']
 
 const INVENTORY_CAPACITY = 4
 var items = []
@@ -36,6 +37,8 @@ func get_input():
 			sell_items()
 		elif body_with_group_on_sensor('portal'):
 			teleport()
+		elif body_with_group_on_sensor('tool'):
+			try_to_buy_tool()
 	if Input.is_action_just_pressed('ui_select') and not firing:
 		$attack_sound.play()
 		firing = true
@@ -63,6 +66,16 @@ func get_input():
 			sprite.play('idle-' + direction)
 		else:
 			sprite.play('walk-' + direction)
+
+func try_to_buy_tool():
+	var tool: KinematicBody2D = body_with_group_on_sensor('tool')
+	var tool_name = tool.name
+	var cost = Globals.tool_info[tool_name]['cost']
+	if money >= cost:
+		money -= cost
+		current_tool = Globals.tool_info[tool_name]
+		trigger_inventory_changed()
+		tool.queue_free()
 	
 func teleport():
 	var portal_main: KinematicBody2D = get_tree().get_nodes_in_group('portal-main')[0]
@@ -111,13 +124,18 @@ func fire_tilemaps():
 	for index in range(3):
 		var neighbor = neighbor_pos[index]
 		var tile_id = tilemap.get_cellv(neighbor)
-		if tile_id > 0:
-			var tile_name = tilemap.tile_set.tile_get_name(tile_id)
-			if tile_name.begins_with('block-'):
-				var dist = tilemap.map_to_world(neighbor).distance_squared_to(position)
-				if dist < min_distance:
-					min_distance = dist
-					index_min_distance = index
+		if tile_id <= 0:
+			continue
+		var tile_name = tilemap.tile_set.tile_get_name(tile_id)
+		if not tile_name.begins_with('block-'):
+			continue
+		var min_strength = Globals.block_info[tile_name]['min_strength']
+		if min_strength > current_tool['strength']:
+			continue
+		var dist = tilemap.map_to_world(neighbor).distance_squared_to(position)
+		if dist < min_distance:
+			min_distance = dist
+			index_min_distance = index
 	
 	if index_min_distance > -1:
 		hit_tile_at(neighbor_pos[index_min_distance])
@@ -127,7 +145,7 @@ func body_with_group_on_sensor(group_name):
 	for body in bodies:
 		if body.is_in_group(group_name):
 			return body
-	return false
+	return null
 
 func fire_nodes():
 	var bodies = sensor.get_overlapping_bodies()
