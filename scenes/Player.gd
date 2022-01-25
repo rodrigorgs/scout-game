@@ -10,6 +10,7 @@ onready var raycast = get_node("RayCast2D")
 onready var sensor = get_node("Sensor")
 export(NodePath) var tileMap
 var attack = 2
+var money = 0.0
 
 const INVENTORY_CAPACITY = 4
 var items = []
@@ -30,6 +31,9 @@ func get_input():
 	if Input.is_action_pressed('ui_up'):
 		velocity.y -= 1
 		direction = 'up'
+	if Input.is_action_just_pressed("interact"):
+		if sensor_overlaps_group('sales'):
+			sell_items()
 	if Input.is_action_just_pressed('ui_select') and not firing:
 		$attack_sound.play()
 		firing = true
@@ -59,6 +63,17 @@ func get_input():
 			sprite.play('walk-' + direction)
 	
 
+func sell_items():
+	var total_money = 0.0
+	for item_name in items:
+		if Globals.item_info.has(item_name):
+			total_money += Globals.item_info.get(item_name).get('value')
+	items = []
+	money += total_money
+	if total_money > 0:
+		$sell_sound.play()
+	trigger_inventory_changed()
+
 func fire_tilemaps():
 	var tilemap: TileMap = tileMap
 	var player_tile_pos = tilemap.world_to_map(position)
@@ -84,6 +99,13 @@ func fire_tilemaps():
 	
 	if index_min_distance > -1:
 		hit_tile_at(neighbor_pos[index_min_distance])
+
+func sensor_overlaps_group(group_name):
+	var bodies = sensor.get_overlapping_bodies()
+	for body in bodies:
+		if body.is_in_group(group_name):
+			return true
+	return false
 
 func fire_nodes():
 	var bodies = sensor.get_overlapping_bodies()
@@ -136,10 +158,13 @@ func get_item(item_name):
 	print("Trying to get item ", item_name)
 	if items.size() < INVENTORY_CAPACITY:
 		items.append(item_name)
-		emit_signal("inventory_changed", items, INVENTORY_CAPACITY)
+		trigger_inventory_changed()
 		return true
 	else:
 		return false
+
+func trigger_inventory_changed():
+	emit_signal("inventory_changed", items, INVENTORY_CAPACITY, money)
 
 func collide_with_tilemap(collision):
 	var tile_pos = collision.collider.world_to_map(position)

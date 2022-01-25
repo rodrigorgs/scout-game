@@ -2,10 +2,12 @@ extends HBoxContainer
 
 var tilemap: TileMap
 
-func _ready():
-	_on_Player_inventory_changed([], 4)
+#func _ready():
+#	_on_Player_inventory_changed([], 4, 0.0)
 
-func _on_Player_inventory_changed(item_names: Array, capacity):
+func _on_Player_inventory_changed(item_names: Array, capacity, money):
+	$Money.text = str(int(money))
+	
 	for i in range(capacity):
 		var item_name = null
 		if i < len(item_names): 
