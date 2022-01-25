@@ -1,8 +1,8 @@
 extends Node2D
 
-onready var player = get_node("TmForeground/Player")
+onready var player = get_node("Player")
 onready var inventory = get_node("UI/MarginContainer/VBoxContainer/Inventory")
-onready var main_portal = get_node("TmForeground/NPCs/PortalMain")
+onready var main_portal = get_node("NPCs/PortalMain")
 
 func _ready():
 	print("Connecting item signal")
