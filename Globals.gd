@@ -36,13 +36,13 @@ var tool_info = {
 	'AxeTool': {
 		'name': 'AxeTool',
 		'strength': 2,
-		'cost': 3,
+		'cost': 4,
 		'image': 'res://images/axe.png'
 	},
 	'PickaxeTool': {
 		'name': 'PickaxeTool',
 		'strength': 5,
-		'cost': 10,
+		'cost': 20,
 		'image': 'res://images/pickaxe.png'
 	},
 }
