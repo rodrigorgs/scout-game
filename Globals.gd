@@ -30,17 +30,20 @@ var tool_info = {
 	'Hands': {
 		'name': 'Hands',
 		'strength': 1,
-		'cost': 0
+		'cost': 0,
+		'image': 'res://images/hand.png'
 	},
 	'AxeTool': {
 		'name': 'AxeTool',
 		'strength': 2,
-		'cost': 3
+		'cost': 3,
+		'image': 'res://images/axe.png'
 	},
 	'PickaxeTool': {
 		'name': 'PickaxeTool',
 		'strength': 5,
-		'cost': 10
+		'cost': 10,
+		'image': 'res://images/pickaxe.png'
 	},
 }
 

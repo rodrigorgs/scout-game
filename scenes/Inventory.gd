@@ -5,8 +5,10 @@ var tilemap: TileMap
 #func _ready():
 #	_on_Player_inventory_changed([], 4, 0.0)
 
-func _on_Player_inventory_changed(item_names: Array, capacity, money):
+func _on_Player_inventory_changed(item_names: Array, capacity, money, current_tool):
 	$Money.text = str(int(money))
+
+	update_tool(current_tool)
 	
 	for i in range(capacity):
 		var item_name = null
@@ -17,7 +19,6 @@ func _on_Player_inventory_changed(item_names: Array, capacity, money):
 		if item_name == null:
 			var img = Image.new()
 			img.load("res://images/slot.png")
-			#var img = preload("res://images/slot.png")
 			new_texture = ImageTexture.new()
 			new_texture.create_from_image(img)
 		else:
@@ -28,6 +29,10 @@ func _on_Player_inventory_changed(item_names: Array, capacity, money):
 			
 		var node: TextureRect = get_node("Item" + str(i))
 		node.texture = new_texture
+
+func update_tool(current_tool):
+	var img = load(current_tool['image'])
+	$CurrentTool.texture = img
 
 func get_cropped_texture(texture : Texture, region : Rect2) -> AtlasTexture:
 	var atlas_texture := AtlasTexture.new()

@@ -208,7 +208,7 @@ func get_item(item_name):
 		return false
 
 func trigger_inventory_changed():
-	emit_signal("inventory_changed", items, INVENTORY_CAPACITY, money)
+	emit_signal("inventory_changed", items, INVENTORY_CAPACITY, money, current_tool)
 
 func collide_with_tilemap(collision):
 	var tile_pos = collision.collider.world_to_map(position)
