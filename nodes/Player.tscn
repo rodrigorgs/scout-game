@@ -37,6 +37,7 @@ enabled = true
 [node name="Line2D" type="Line2D" parent="."]
 
 [node name="Fog" type="Sprite" parent="."]
+visible = false
 texture = ExtResource( 3 )
 
 [node name="Sensor" type="Area2D" parent="."]

@@ -11,7 +11,10 @@ onready var sensor = get_node("Sensor")
 export(NodePath) var tileMap
 var attack = 2
 
-signal got_item
+const INVENTORY_CAPACITY = 4
+var items = []
+
+signal inventory_changed
 
 func get_input():
 	velocity = Vector2.ZERO
@@ -129,6 +132,15 @@ func _physics_process(delta):
 		if collision and collision.collider is TileMap:
 			collide_with_tilemap(collision)
 
+func get_item(item_name):
+	print("Trying to get item ", item_name)
+	if items.size() < INVENTORY_CAPACITY:
+		items.append(item_name)
+		emit_signal("inventory_changed", items, INVENTORY_CAPACITY)
+		return true
+	else:
+		return false
+
 func collide_with_tilemap(collision):
 	var tile_pos = collision.collider.world_to_map(position)
 	tile_pos -= collision.normal
@@ -136,9 +148,10 @@ func collide_with_tilemap(collision):
 	if tile_id > 0:
 		var tile_name: String = collision.collider.tile_set.tile_get_name(tile_id)
 		if tile_name.begins_with('item-'):
-			collision.collider.set_cellv(tile_pos, 0)
-			emit_signal("got_item", tile_name)
-			$pickup_sound.play()
+			if get_item(tile_name):
+				collision.collider.set_cellv(tile_pos, 0)
+				$pickup_sound.play()
+			
 		elif tile_name == 'water':
 			if not $splash_sound.playing:
 				$splash_sound.play()

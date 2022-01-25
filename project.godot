@@ -24,10 +24,14 @@ config/name="scout"
 run/main_scene="res://scenes/main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Globals="*res://Globals.gd"
+
 [display]
 
-window/size/width=160
-window/size/height=100
+window/size/width=192
+window/size/height=120
 window/size/test_width=960
 window/size/test_height=600
 window/stretch/mode="viewport"
