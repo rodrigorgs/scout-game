@@ -32,10 +32,15 @@ var tool_info = {
 		'strength': 1,
 		'cost': 0
 	},
+	'AxeTool': {
+		'name': 'AxeTool',
+		'strength': 2,
+		'cost': 3
+	},
 	'PickaxeTool': {
 		'name': 'PickaxeTool',
-		'strength': 2,
-		'cost': 5
+		'strength': 5,
+		'cost': 10
 	},
 }
 

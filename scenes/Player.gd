@@ -70,12 +70,16 @@ func get_input():
 func try_to_buy_tool():
 	var tool: KinematicBody2D = body_with_group_on_sensor('tool')
 	var tool_name = tool.name
+	var tool_info = Globals.tool_info[tool_name]
 	var cost = Globals.tool_info[tool_name]['cost']
 	if money >= cost:
 		money -= cost
-		current_tool = Globals.tool_info[tool_name]
+		# Replace only with stronger tools
+		if tool_info['strength'] >= current_tool['strength']:
+			current_tool = tool_info
 		trigger_inventory_changed()
-		tool.queue_free()
+		if not Engine.is_editor_hint():
+			tool.queue_free()
 	
 func teleport():
 	var portal_main: KinematicBody2D = get_tree().get_nodes_in_group('portal-main')[0]
