@@ -1,7 +1,7 @@
 extends Node2D
 
 onready var player = get_node("TmForeground/Player")
-onready var inventory = get_node("TmForeground/Player/MarginContainer/VBoxContainer/Inventory")
+onready var inventory = get_node("TmForeground/Player/UI/VBoxContainer/Inventory")
 onready var main_portal = get_node("TmForeground/NPCs/PortalMain")
 
 func _ready():
