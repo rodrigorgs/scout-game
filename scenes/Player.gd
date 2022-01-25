@@ -32,8 +32,10 @@ func get_input():
 		velocity.y -= 1
 		direction = 'up'
 	if Input.is_action_just_pressed("interact"):
-		if sensor_overlaps_group('sales'):
+		if body_with_group_on_sensor('sales'):
 			sell_items()
+		elif body_with_group_on_sensor('portal'):
+			teleport()
 	if Input.is_action_just_pressed('ui_select') and not firing:
 		$attack_sound.play()
 		firing = true
@@ -62,7 +64,27 @@ func get_input():
 		else:
 			sprite.play('walk-' + direction)
 	
-
+func teleport():
+	var portal_main: KinematicBody2D = get_tree().get_nodes_in_group('portal-main')[0]
+	var portal: KinematicBody2D = body_with_group_on_sensor('portal')
+	var currents = get_tree().get_nodes_in_group('portal-current')
+	
+	if portal == portal_main:	
+		if len(currents) != 0:
+			var current = currents[0]
+			teleport_to_node(current)
+	else:
+		portal_main.visible = true
+		if not portal.is_in_group('portal-current'):
+			for current in currents:
+				current.remove_from_group('portal-current')
+			portal.add_to_group('portal-current')
+		
+		teleport_to_node(portal_main)
+		
+func teleport_to_node(node: Node2D):
+	position = node.position + Vector2(0, 16)
+	
 func sell_items():
 	var total_money = 0.0
 	for item_name in items:
@@ -100,11 +122,11 @@ func fire_tilemaps():
 	if index_min_distance > -1:
 		hit_tile_at(neighbor_pos[index_min_distance])
 
-func sensor_overlaps_group(group_name):
+func body_with_group_on_sensor(group_name):
 	var bodies = sensor.get_overlapping_bodies()
 	for body in bodies:
 		if body.is_in_group(group_name):
-			return true
+			return body
 	return false
 
 func fire_nodes():
