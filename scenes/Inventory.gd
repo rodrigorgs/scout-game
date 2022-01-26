@@ -17,15 +17,27 @@ func _on_Player_inventory_changed(item_names: Array, capacity, money, current_to
 		
 		var new_texture = null
 		if item_name == null:
+			# No item
 			var img = Image.new()
 			img.load("res://images/slot.png")
 			new_texture = ImageTexture.new()
 			new_texture.create_from_image(img)
 		else:
-			var tile_id = tilemap.tile_set.find_tile_by_name(item_name)	
-			var texture = tilemap.tile_set.tile_get_texture(tile_id)
-			var region = tilemap.tile_set.tile_get_region(tile_id)
-			new_texture = get_cropped_texture(texture, region)
+			var path = 'res://images/' + item_name + '.png'
+			print('trying path ', path)
+			if load(path) != null:
+				# Item that exists as an image
+				var img = Image.new()
+				img.load(path)
+				new_texture = ImageTexture.new()
+				new_texture.create_from_image(img)
+				print('ok')
+			else:
+				# Item that exists in the tileset
+				var tile_id = tilemap.tile_set.find_tile_by_name(item_name)	
+				var texture = tilemap.tile_set.tile_get_texture(tile_id)
+				var region = tilemap.tile_set.tile_get_region(tile_id)
+				new_texture = get_cropped_texture(texture, region)
 			
 		var node: TextureRect = get_node("Item" + str(i))
 		node.texture = new_texture

@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-var speed = 50  # speed in pixels/sec
+var speed = 75  # speed in pixels/sec
 var velocity = Vector2.ZERO
 var direction = 'left'
 var direction_vector = Vector2.LEFT
@@ -192,36 +192,34 @@ func _physics_process(delta):
 	get_input()
 	velocity = move_and_slide(velocity)
 	
-	for i in get_slide_count():
-		var collision = get_slide_collision(i)
-		# Confirm the colliding body is a TileMap
-		if collision and collision.collider is TileMap:
-			collide_with_tilemap(collision)
+#	for i in get_slide_count():
+#		var collision = get_slide_collision(i)
+#		if collision and collision.collider is TileMap:
+#			collide_with_tilemap(collision)
 
-func get_item(item_name):
-	print("Trying to get item ", item_name)
+func trigger_inventory_changed():
+	emit_signal("inventory_changed", items, INVENTORY_CAPACITY, money, current_tool)
+
+func _on_item_entered(item):
+	print('entered item ', item.item_name)
 	if items.size() < INVENTORY_CAPACITY:
-		items.append(item_name)
+		$pickup_sound.play()
+		if not Engine.editor_hint:
+			item.queue_free()
+		items.append(item.item_name)
 		trigger_inventory_changed()
 		return true
 	else:
 		return false
 
-func trigger_inventory_changed():
-	emit_signal("inventory_changed", items, INVENTORY_CAPACITY, money, current_tool)
 
-func collide_with_tilemap(collision):
-	var tile_pos = collision.collider.world_to_map(position)
-	tile_pos -= collision.normal
-	var tile_id = collision.collider.get_cellv(tile_pos)
-	if tile_id > 0:
-		var tile_name: String = collision.collider.tile_set.tile_get_name(tile_id)
-		if tile_name.begins_with('item-'):
-			if get_item(tile_name):
-				collision.collider.set_cellv(tile_pos, 0)
-				$pickup_sound.play()
-			
-		elif tile_name == 'water':
-			if not $splash_sound.playing:
-				$splash_sound.play()
+#func collide_with_tilemap(collision):
+#	var tile_pos = collision.collider.world_to_map(position)
+#	tile_pos -= collision.normal
+#	var tile_id = collision.collider.get_cellv(tile_pos)
+#	if tile_id > 0:
+#		var tile_name: String = collision.collider.tile_set.tile_get_name(tile_id)
+#		if tile_name == 'water':
+#			if not $splash_sound.playing:
+#				$splash_sound.play()
 	

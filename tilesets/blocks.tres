@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=18 format=2]
 
-[ext_resource path="res://images/star.png" type="Texture" id=1]
+[ext_resource path="res://images/item-star.png" type="Texture" id=1]
 [ext_resource path="res://tilesets/forest/Plants and Trees.png" type="Texture" id=2]
 [ext_resource path="res://tilesets/forest2/forest2.png" type="Texture" id=3]
 [ext_resource path="res://images/brick.png" type="Texture" id=4]
