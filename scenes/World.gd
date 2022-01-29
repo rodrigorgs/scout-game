@@ -24,5 +24,36 @@ func show_prices():
 		if node != null:
 			node.text_right = "$" + str(Globals.tool_info[tool_name]['cost'])
 	
+func _on_dynamite_exploded(dynamite: Area2D):
+	print('boom!')
+	$explosion_sound.play()
+	
+	var tilemap = $TmForeground
+	var center = tilemap.world_to_map(dynamite.position)
+	
+	# explode tiles
+	explode_position(tilemap, center.x, center.y)
+	explode_position(tilemap, center.x, center.y - 1)
+	explode_position(tilemap, center.x, center.y + 1)
+	explode_position(tilemap, center.x - 1, center.y)
+	explode_position(tilemap, center.x - 1, center.y - 1)
+	explode_position(tilemap, center.x - 1, center.y + 1)
+	explode_position(tilemap, center.x + 1, center.y)
+	explode_position(tilemap, center.x + 1, center.y - 1)
+	explode_position(tilemap, center.x + 1, center.y + 1)
+	
+	# explode monsters
+	var bodies = dynamite.get_overlapping_bodies()
+	for body in bodies:
+		if body is Monster:
+			body.queue_free()
+	
+	dynamite.queue_free()
 	
 	
+func explode_position(tilemap: TileMap, x: int, y: int) -> void:
+	var tile_id = tilemap.get_cell(x, y)
+	if tile_id > 0:
+		var name = tilemap.tile_set.tile_get_name(tile_id)
+		if name.begins_with("block-"):
+			tilemap.set_cell(x, y, 0)

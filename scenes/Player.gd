@@ -12,11 +12,15 @@ export(NodePath) var tileMap
 var attack = 2
 var money = 0.0
 var current_tool = Globals.tool_info['Hands']
+var world
 
 const INVENTORY_CAPACITY = 4
 var items = []
 
 signal inventory_changed
+
+func _ready():
+	world = get_parent()
 
 func get_input():
 	velocity = Vector2.ZERO
@@ -32,6 +36,17 @@ func get_input():
 	if Input.is_action_pressed('ui_up'):
 		velocity.y -= 1
 		direction = 'up'
+	if Input.is_action_just_pressed("throw"):
+		var dynamite = preload("res://nodes/Dynamite.tscn").instance()
+		world.add_child(dynamite)
+		dynamite.position = position
+		var tween = Tween.new()
+		dynamite.add_child(tween)
+		tween.interpolate_property(dynamite, "position",
+			position, position + direction_vector * 32, 1,
+			Tween.TRANS_CUBIC, Tween.EASE_OUT)
+		dynamite.connect("dynamite_exploded", world, "_on_dynamite_exploded")
+		tween.start()
 	if Input.is_action_just_pressed("interact"):
 		if body_with_group_on_sensor('sales'):
 			sell_items()
@@ -49,7 +64,7 @@ func get_input():
 	# Make sure diagonal movement isn't faster
 	velocity = velocity.normalized() * speed
 	if velocity != Vector2.ZERO:
-		direction_vector = velocity
+		direction_vector = velocity.normalized()
 	
 	if direction == 'up':
 		sensor.rotation_degrees = 180
