@@ -46,6 +46,7 @@ func get_input():
 			position, position + direction_vector * 32, 1,
 			Tween.TRANS_CUBIC, Tween.EASE_OUT)
 		dynamite.connect("dynamite_exploded", world, "_on_dynamite_exploded")
+		dynamite.light_fire()
 		tween.start()
 	if Input.is_action_just_pressed("interact"):
 		if body_with_group_on_sensor('sales'):

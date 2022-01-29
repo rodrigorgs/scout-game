@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Area2D",
+"class": "Dynamite",
+"language": "GDScript",
+"path": "res://nodes/Dynamite.gd"
+}, {
+"base": "Area2D",
 "class": "Item",
 "language": "GDScript",
 "path": "res://scenes/Flower.gd"
@@ -20,6 +25,7 @@ _global_script_classes=[ {
 "path": "res://scenes/MonsterGodot.gd"
 } ]
 _global_script_class_icons={
+"Dynamite": "",
 "Item": "",
 "Monster": ""
 }

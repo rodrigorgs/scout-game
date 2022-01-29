@@ -43,10 +43,14 @@ func _on_dynamite_exploded(dynamite: Area2D):
 	explode_position(tilemap, center.x + 1, center.y + 1)
 	
 	# explode monsters
-	var bodies = dynamite.get_overlapping_bodies()
-	for body in bodies:
+	for body in dynamite.get_overlapping_bodies():
 		if body is Monster:
 			body.queue_free()
+	for body in dynamite.get_overlapping_areas():
+		print("overlapping")
+		if body is Dynamite:
+			print("dynamite")
+			body.light_fire()
 	
 	dynamite.queue_free()
 	
