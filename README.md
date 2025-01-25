@@ -1,6 +1,6 @@
 # Scout
 
-Scout é um jogo de aventura top-down inspirado por SteamWorld Dig. O jogo usa o motor Godot.
+Scout é um jogo de aventura top-down inspirado por SteamWorld Dig. O jogo usa o motor Godot 3.6.
 
 ![Screenshot de Scout](screenshot.png)
 
